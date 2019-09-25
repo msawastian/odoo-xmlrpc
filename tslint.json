@@ -1,9 +1,34 @@
 {
     "defaultSeverity": "error",
     "extends": [
-        "tslint:recommended"
+        "tslint-config-airbnb"
     ],
     "jsRules": {},
-    "rules": {},
+    "rules": {
+        "ter-indent": [
+          "spaces",
+          2
+        ],
+        "ter-arrow-parens": [
+          true,
+          "as-needed"
+        ],
+        "trailing-comma": false,
+        "max-line-length": [
+          false,
+          140
+        ],
+        "no-default-export": false,
+        "import-name": [
+          false
+        ],
+        "align": false,
+        "sort-imports": [
+          "warn",
+          {
+            "ignoreCase": true
+          }
+        ]
+      },
     "rulesDirectory": []
 }

@@ -1,58 +1,71 @@
 /*
 *
-* Author: Faisal Sami
+* Original author: Faisal Sami
 * mail: faisalsami78@gmail.com
 * https://github.com/faisalsami/odoo-xmlrpc
 *
+* Fork contributor: Mateusz Sawastian
+* mail: m.sawastian@gmail.com
+* https://github.com/msawastian/odoo-xmlrpc
 *
 */
-var xmlrpc = require('xmlrpc');
-var url = require('url');
+import url from 'url';
+import xmlrpc from 'xmlrpc';
+import { Config } from './types/IConfig';
 
-var Odoo = function (config) {
-    config = config || {};
+export class Odoo {
+    urlParts: url.UrlWithStringQuery;
+    host: string | undefined;
+    port: number;
+    db: string | undefined;
+    username: string | undefined;
+    password: string | undefined;
+    secure: boolean;
+    uid: number | undefined;
 
-    var urlparts = url.parse(config.url);
-    this.host = urlparts.hostname;
-    this.port = config.port || urlparts.port;
-    this.db = config.db;
-    this.username = config.username;
-    this.password = config.password;
-    this.secure = true;
-    if(urlparts.protocol !== 'https:') {
-      this.secure = false
+    constructor(private readonly config: Config) {
+      this.urlParts = url.parse(this.config.url);
+      this.host = this.urlParts.hostname;
+      this.port = this.config.port || (this.urlParts.port ? parseInt(this.urlParts.port, 10) : 80);
+      this.db = this.config.db;
+      this.username = this.config.username;
+      this.password = this.config.password;
+      this.secure = this.urlParts.protocol === 'https:' ? true : false;
+      this.uid = 0;
     }
-    var uid = 0;
 
-    this.connect = function(callback){
-        var clientOptions = {
-            host: this.host,
-            port: this.port,
-            path: '/xmlrpc/2/common'
-        }
-        var client;
-        if(this.secure == false) {
-          client = xmlrpc.createClient(clientOptions);
-        }
-        else {
-          client = xmlrpc.createSecureClient(clientOptions);
-        }
-        var params = [];
-        params.push(this.db);
-        params.push(this.username);
-        params.push(this.password);
-        params.push({});
-        client.methodCall('authenticate', params, function(error, value) {
-            if(error){
-              return callback(error, null)
-            }
-            if(!value){
-              return callback({ message: "No UID returned from authentication." }, null)
-            }
-            uid = value;
-            return callback(null,value)
+    /**
+     * Connect to ODOO database.
+     */
+    public async connect(): Promise<any> {
+      let client: xmlrpc.Client;
+      const methodParams = [
+        this.db,
+        this.username,
+        this.password,
+        {}
+      ];
+      const clientOptions = {
+        host: this.host,
+        port: this.port,
+        path: '/xmlrpc/2/common'
+      };
+
+      if (this.secure) {
+        client = xmlrpc.createSecureClient(clientOptions);
+      } else {
+        client = xmlrpc.createClient(clientOptions);
+      }
+
+      return new Promise((resolve, reject) => {
+        client.methodCall('authenticate', methodParams, (error, value) => {
+          if (error) reject(error);
+          if (value) resolve(value);
+          else resolve({ message: 'No UID returned from authentication.' });
         });
-    };
+      });
+    }
+
     this.execute_kw = function(model, method, params, callback){
         var clientOptions = {
             host: this.host,
@@ -139,6 +152,4 @@ var Odoo = function (config) {
             return callback(null,value);
         });
     };
-};
-
-module.exports = Odoo;
+}
