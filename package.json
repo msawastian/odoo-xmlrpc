@@ -1,20 +1,22 @@
 {
-  "name": "odoo-xmlrpc",
+  "name": "odoo-xmlrpc-ng",
   "version": "1.0.7",
   "description": "Nodejs client to call Odoo RPC's through xmlrpc library.",
-  "author": {
-    "name": "Faisal Sami",
-    "email": "faisalsami78@gmail.com"
-  },
+  "author": "Faisal Sami <faisalsami78@gmail.com>",
+  "contributors": [
+    "Mateusz Sawastian <m.sawastian@gmail.com"
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/faisalsami/odoo-xmlrpc"
+    "url": "git+https://github.com/msawastian/odoo-xmlrpc.git"
   },
-  "homepage": "https://github.com/faisalsami/odoo-xmlrpc",
-  "bugs": "https://github.com/faisalsami/odoo-xmlrpc/issues",
-  "readme": "https://github.com/faisalsami/odoo-xmlrpc/blob/master/README.md",
+  "homepage": "https://github.com/msawastian/odoo-xmlrpc",
+  "bugs": {
+    "url": "https://github.com/msawastian/odoo-xmlrpc/issues"
+  },
   "directories": {
-    "lib": "./lib/"
+    "example": "examples",
+    "lib": "lib"
   },
   "main": "./lib/index.js",
   "engines": {
@@ -22,8 +24,8 @@
     "npm": ">=1.0.0"
   },
   "dependencies": {
-    "xmlrpc": "^1.3.1",
-    "url": "*"
+    "url": "*",
+    "xmlrpc": "^1.3.2"
   },
   "license": "Apache-2.0",
   "scripts": {},
@@ -31,18 +33,11 @@
     "odoo",
     "xmlrpc"
   ],
-  "bugs": {
-    "url": "https://github.com/faisalsami/odoo-xmlrpc/issues"
-  },
-  "homepage": "https://github.com/faisalsami/odoo-xmlrpc",
-  "_npmUser": {
-    "name": "faisalsami",
-    "email": "faisalsami78@gmail.com"
-  },
   "maintainers": [
-    {
-      "name": "faisalsami",
-      "email": "faisalsami78@gmail.com"
-    }
-  ]
+    "msawastian <m.sawastian@gmail.com>"
+  ],
+  "devDependencies": {
+    "tslint": "^5.20.0",
+    "typescript": "^3.6.3"
+  }
 }
